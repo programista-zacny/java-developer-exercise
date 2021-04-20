@@ -1,0 +1,52 @@
+plugins {
+    id 'org.springframework.boot' version '2.4.5'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'groovy'
+}
+
+group = 'pl.programistazacny'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.mapstruct:mapstruct:1.4.2.Final'
+    implementation 'com.opencsv:opencsv:5.4'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'com.h2database:h2:1.4.200'
+    //implementation 'org.zalando:logbook-spring-boot-starter:2.6.2' conflict with H2 console
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.spockframework:spock-core:2.0-M5-groovy-3.0'
+    testImplementation 'org.spockframework:spock-spring:2.0-M5-groovy-3.0'
+    testImplementation 'org.codehaus.groovy:groovy-all:3.0.7'
+    testImplementation 'com.tngtech.archunit:archunit:0.18.0'
+}
+
+ext['groovy.version'] = '3.0.7'
+
+test {
+    useJUnitPlatform()
+
+    afterTest { desc, result ->
+        logger.quiet "Executing test \"${desc.name}\" [${desc.className}] with result: ${result.resultType} and took: ${result.endTime - result.startTime}ms"
+    }
+}
