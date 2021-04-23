@@ -18,7 +18,7 @@ import pl.programistazacny.javadeveloperexercise.adapter.h2.model.PaymentH2;
 @EntityScan(basePackageClasses = PaymentH2.class)
 @PropertySource("classpath:h2.properties")
 @Import(DataSourceAutoConfiguration.class)
-public class H2Configuration {
+class H2Configuration {
 
     @Bean
     PaymentH2Repository paymentH2Repository(PaymentH2CrudRepository paymentH2CrudRepository) {
