@@ -3,6 +3,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id 'groovy'
+    id 'com.palantir.docker' version '0.26.0'
 }
 
 group = 'pl.programistazacny'
@@ -49,4 +50,18 @@ test {
     afterTest { desc, result ->
         logger.quiet "Executing test \"${desc.name}\" [${desc.className}] with result: ${result.resultType} and took: ${result.endTime - result.startTime}ms"
     }
+}
+
+docker {
+    def dockerName = "$project.group/$project.name".toLowerCase()
+    def dockerTag = project.version.toLowerCase()
+    def jarFileName = bootJar.archiveFileName.get()
+
+    name dockerName
+    tag 'latest', "$dockerName:$dockerTag"
+    files project.libsDir
+    buildArgs([
+            jarFileName: jarFileName
+    ])
+    noCache true
 }
