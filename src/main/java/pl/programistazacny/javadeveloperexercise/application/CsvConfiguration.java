@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.validation.annotation.Validated;
 import pl.programistazacny.javadeveloperexercise.adapter.csv.PaymentCsvRepository;
 
 import javax.validation.constraints.NotBlank;
@@ -44,6 +45,7 @@ class CsvConfiguration {
     }
 
     @ConfigurationProperties(prefix = "csv")
+    @Validated
     @Data
     static class CsvProperties {
 
