@@ -2,6 +2,7 @@ package pl.programistazacny.javadeveloperexercise
 
 import pl.programistazacny.javadeveloperexercise.adapter.controller.model.PaymentRequest
 import pl.programistazacny.javadeveloperexercise.adapter.csv.model.PaymentCsv
+import pl.programistazacny.javadeveloperexercise.adapter.dynamodb.model.PaymentDynamoDB
 import pl.programistazacny.javadeveloperexercise.adapter.h2.model.PaymentH2
 import pl.programistazacny.javadeveloperexercise.domain.dto.PaymentDto
 import pl.programistazacny.javadeveloperexercise.domain.model.Payment
@@ -10,7 +11,7 @@ import spock.lang.Specification
 abstract class BaseSpecification extends Specification {
 
     protected PaymentRequest randomPaymentRequest() {
-        return new PaymentRequest(
+        new PaymentRequest(
                 new BigDecimal(BigInteger.valueOf(new Random().nextInt(10001)), 2),
                 "PLN",
                 UUID.randomUUID(),
@@ -19,7 +20,7 @@ abstract class BaseSpecification extends Specification {
     }
 
     protected PaymentRequest emptyPaymentRequest() {
-        return new PaymentRequest(null, null, null, null)
+        new PaymentRequest(null, null, null, null)
     }
 
     protected Payment randomPayment() {
@@ -29,7 +30,7 @@ abstract class BaseSpecification extends Specification {
         payment.setCurrency("PLN")
         payment.setUserId(UUID.randomUUID())
         payment.setTargetAccountNumber("PL32109024025139464873117912")
-        return payment
+        payment
     }
 
     protected PaymentCsv randomPaymentCsv() {
@@ -39,7 +40,7 @@ abstract class BaseSpecification extends Specification {
         paymentCsv.setCurrency("PLN")
         paymentCsv.setUserId(UUID.randomUUID())
         paymentCsv.setTargetAccountNumber("PL32109024025139464873117912")
-        return paymentCsv
+        paymentCsv
     }
 
     protected PaymentDto randomPaymentDto() {
@@ -48,11 +49,21 @@ abstract class BaseSpecification extends Specification {
         paymentDto.setCurrency("PLN")
         paymentDto.setUserId(UUID.randomUUID())
         paymentDto.setTargetAccountNumber("PL32109024025139464873117912")
-        return paymentDto
+        paymentDto
     }
 
     protected PaymentH2 randomPaymentH2() {
-        return new PaymentH2(
+        new PaymentH2(
+                UUID.randomUUID(),
+                new BigDecimal(BigInteger.valueOf(new Random().nextInt(10001)), 2),
+                "PLN",
+                UUID.randomUUID(),
+                "PL32109024025139464873117912"
+        )
+    }
+
+    protected PaymentDynamoDB randomPaymentDynamoDB() {
+        new PaymentDynamoDB(
                 UUID.randomUUID(),
                 new BigDecimal(BigInteger.valueOf(new Random().nextInt(10001)), 2),
                 "PLN",

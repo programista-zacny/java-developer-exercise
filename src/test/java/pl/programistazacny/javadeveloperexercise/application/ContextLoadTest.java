@@ -5,7 +5,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource("classpath:test.properties")
+@TestPropertySource(value = "classpath:test.properties", properties = {"storage.mode=csv"})
 class ContextLoadTest {
 
     @Test
