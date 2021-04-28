@@ -23,19 +23,17 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @GetMapping("/payment/{id}")
-    @ResponseBody
     ResponseEntity<PaymentResponse> get(@PathVariable UUID id) {
-        return ResponseEntity.of(paymentService.get(id).map(payment -> PaymentControllerMapper.INSTANCE.domainToResponse(payment)));
+        return ResponseEntity.of(paymentService.get(id).map(PaymentControllerMapper.INSTANCE::domainToResponse));
     }
 
     @GetMapping("/payments")
-    @ResponseBody
     ResponseEntity<List<PaymentResponse>> getAll() {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(
                         paymentService.getAll().stream()
-                                .map(payment -> PaymentControllerMapper.INSTANCE.domainToResponse(payment))
+                                .map(PaymentControllerMapper.INSTANCE::domainToResponse)
                                 .collect(Collectors.toUnmodifiableList())
                 );
     }
@@ -56,7 +54,7 @@ public class PaymentController {
         Optional<Payment> paymentEdited = paymentService.edit(id, PaymentControllerMapper.INSTANCE.requestToDto(paymentRequest));
         return ResponseEntity
                 .status(paymentEdited.isPresent() ? HttpStatus.OK : HttpStatus.NOT_FOUND)
-                .body(paymentEdited.isPresent() ? PaymentControllerMapper.INSTANCE.domainToResponse(paymentEdited.get()) : null);
+                .body(paymentEdited.map(PaymentControllerMapper.INSTANCE::domainToResponse).orElse(null));
     }
 
     @DeleteMapping("/payment/{id}")
