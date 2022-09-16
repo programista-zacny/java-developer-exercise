@@ -1,14 +1,14 @@
 plugins {
-    id 'org.springframework.boot' version '2.4.5'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'org.springframework.boot' version '2.7.3'
+    id 'io.spring.dependency-management' version '1.0.13.RELEASE'
     id 'java'
     id 'groovy'
-    id 'com.palantir.docker' version '0.26.0'
+    id 'com.palantir.docker' version '0.34.0'
 }
 
 group = 'pl.programistazacny'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+version = '2.0.0-SNAPSHOT'
+sourceCompatibility = '17'
 
 configurations {
     compileOnly {
@@ -24,30 +24,28 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
 
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.mapstruct:mapstruct:1.4.2.Final'
-    implementation 'com.opencsv:opencsv:5.4'
+    implementation 'org.mapstruct:mapstruct:1.5.2.Final'
+    implementation 'com.opencsv:opencsv:5.7.0'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    runtimeOnly 'com.h2database:h2:1.4.200'
+    runtimeOnly 'com.h2database:h2:2.1.214'
     //implementation 'org.zalando:logbook-spring-boot-starter:2.6.2' conflict with H2 console
-    implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.1004')
+    implementation platform('com.amazonaws:aws-java-sdk-bom:1.12.304')
     implementation 'io.github.boostchicken:spring-data-dynamodb:5.2.5'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation platform('org.spockframework:spock-bom:2.0-M5-groovy-3.0')
+    testImplementation platform('org.spockframework:spock-bom:2.2-groovy-4.0')
     testImplementation 'org.spockframework:spock-core'
     testImplementation 'org.spockframework:spock-spring'
-    testImplementation 'org.codehaus.groovy:groovy-all:3.0.7'
-    testImplementation 'com.tngtech.archunit:archunit:0.18.0'
-    testImplementation platform('org.testcontainers:testcontainers-bom:1.15.3')
+    testImplementation 'org.apache.groovy:groovy-all:4.0.5'
+    testImplementation 'com.tngtech.archunit:archunit:0.23.1'
+    testImplementation platform('org.testcontainers:testcontainers-bom:1.17.3')
     testImplementation('org.testcontainers:spock')
 }
-
-ext['groovy.version'] = '3.0.7'
 
 test {
     useJUnitPlatform()
@@ -64,7 +62,7 @@ docker {
 
     name dockerName
     tag 'latest', "$dockerName:$dockerTag"
-    files project.libsDir
+    files project.libsDirectory
     buildArgs([
             jarFileName: jarFileName
     ])
