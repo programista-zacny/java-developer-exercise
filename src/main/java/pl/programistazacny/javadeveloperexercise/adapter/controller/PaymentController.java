@@ -14,7 +14,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,8 +32,7 @@ public class PaymentController {
                 .status(HttpStatus.OK)
                 .body(
                         paymentService.getAll().stream()
-                                .map(PaymentControllerMapper.INSTANCE::domainToResponse)
-                                .collect(Collectors.toUnmodifiableList())
+                                .map(PaymentControllerMapper.INSTANCE::domainToResponse).toList()
                 );
     }
 

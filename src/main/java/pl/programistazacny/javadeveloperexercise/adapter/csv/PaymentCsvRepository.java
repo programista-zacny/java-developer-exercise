@@ -13,11 +13,9 @@ import pl.programistazacny.javadeveloperexercise.domain.model.Payment;
 import pl.programistazacny.javadeveloperexercise.domain.port.PaymentRepository;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class PaymentCsvRepository implements PaymentRepository {
@@ -26,33 +24,33 @@ public class PaymentCsvRepository implements PaymentRepository {
 
     @Override
     public Optional<Payment> findById(UUID id) {
-        return findByIdRaw(id).map(paymentCsv -> PaymentCsvMapper.INSTANCE.csvToDomain(paymentCsv));
+        return findByIdRaw(id).map(PaymentCsvMapper.INSTANCE::csvToDomain);
     }
 
     private Optional<PaymentCsv> findByIdRaw(UUID id) {
         return findAllRaw().stream()
                 .filter(payment -> payment.getId().equals(id))
                 .reduce((p1, p2) -> {
-                    throw new IllegalStateException("Multiple elements: " + p1 + ", " + p2);
+                    throw new CsvException("Multiple elements: " + p1 + ", " + p2);
                 });
     }
 
     @Override
     public List<Payment> findAll() {
         return findAllRaw().stream()
-                .map(paymentCsv -> PaymentCsvMapper.INSTANCE.csvToDomain(paymentCsv))
-                .collect(Collectors.toList());
+                .map(PaymentCsvMapper.INSTANCE::csvToDomain)
+                .toList();
     }
 
     private List<PaymentCsv> findAllRaw() {
         List<PaymentCsv> payments;
         try {
-            payments = new CsvToBeanBuilder(new FileReader(csvFilename))
+            payments = new CsvToBeanBuilder<PaymentCsv>(new FileReader(csvFilename))
                     .withType(PaymentCsv.class)
                     .build()
                     .parse();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Problem with Payments csv file!", e);
+            throw new CsvException("Problem with Payments csv file!", e);
         }
         return payments;
     }
@@ -62,17 +60,17 @@ public class PaymentCsvRepository implements PaymentRepository {
         PaymentCsv paymentCsv = PaymentCsvMapper.INSTANCE.dtoToCsv(paymentDto);
         paymentCsv.setId(UUID.randomUUID());
 
-        write(Arrays.asList(paymentCsv), true);
+        write(List.of(paymentCsv), true);
 
         return PaymentCsvMapper.INSTANCE.csvToDomain(paymentCsv);
     }
 
     private void write(List<PaymentCsv> paymentsCsv, boolean append) {
         try (Writer writer = new FileWriter(csvFilename, append)) {
-            StatefulBeanToCsv beanToCsv = new StatefulBeanToCsvBuilder(writer).build();
+            StatefulBeanToCsv<PaymentCsv> beanToCsv = new StatefulBeanToCsvBuilder<PaymentCsv>(writer).build();
             beanToCsv.write(paymentsCsv);
         } catch (IOException | CsvRequiredFieldEmptyException | CsvDataTypeMismatchException e) {
-            throw new RuntimeException("Problem with writing to csv file!", e);
+            throw new CsvException("Problem with writing to csv file!", e);
         }
     }
 

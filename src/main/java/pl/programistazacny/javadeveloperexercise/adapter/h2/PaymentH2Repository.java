@@ -10,7 +10,6 @@ import pl.programistazacny.javadeveloperexercise.domain.port.PaymentRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @RequiredArgsConstructor
@@ -20,14 +19,14 @@ public class PaymentH2Repository implements PaymentRepository {
 
     @Override
     public Optional<Payment> findById(UUID id) {
-        return paymentH2CrudRepository.findById(id).map(paymentH2 -> PaymentH2Mapper.INSTANCE.h2ToDomain(paymentH2));
+        return paymentH2CrudRepository.findById(id).map(PaymentH2Mapper.INSTANCE::h2ToDomain);
     }
 
     @Override
     public List<Payment> findAll() {
         return StreamSupport.stream(paymentH2CrudRepository.findAll().spliterator(), false)
-                .map(paymentH2 -> PaymentH2Mapper.INSTANCE.h2ToDomain(paymentH2))
-                .collect(Collectors.toList());
+                .map(PaymentH2Mapper.INSTANCE::h2ToDomain)
+                .toList();
     }
 
     @Override

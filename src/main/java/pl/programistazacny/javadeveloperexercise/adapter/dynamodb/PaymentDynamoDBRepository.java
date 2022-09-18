@@ -10,7 +10,6 @@ import pl.programistazacny.javadeveloperexercise.domain.port.PaymentRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @RequiredArgsConstructor
@@ -20,14 +19,14 @@ public class PaymentDynamoDBRepository implements PaymentRepository {
 
     @Override
     public Optional<Payment> findById(UUID id) {
-        return paymentDynamoDBCrudRepository.findById(id).map(paymentDynamoDB -> PaymentDynamoDBMapper.INSTANCE.dynamoDBToDomain(paymentDynamoDB));
+        return paymentDynamoDBCrudRepository.findById(id).map(PaymentDynamoDBMapper.INSTANCE::dynamoDBToDomain);
     }
 
     @Override
     public List<Payment> findAll() {
         return StreamSupport.stream(paymentDynamoDBCrudRepository.findAll().spliterator(), false)
-                .map(paymentDynamoDB -> PaymentDynamoDBMapper.INSTANCE.dynamoDBToDomain(paymentDynamoDB))
-                .collect(Collectors.toList());
+                .map(PaymentDynamoDBMapper.INSTANCE::dynamoDBToDomain)
+                .toList();
     }
 
     @Override
