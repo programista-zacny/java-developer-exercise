@@ -1,12 +1,12 @@
-FROM openjdk:11.0.11-jdk
+FROM openjdk:17.0.2
 MAINTAINER jacek.lacny
 
 ARG jarFileName
 
-RUN adduser --system --group spring
-USER spring
-COPY $jarFileName /home/spring/app.jar
-WORKDIR /home/spring
+RUN useradd --system --user-group app
+USER app
+COPY $jarFileName /home/app/app.jar
+WORKDIR /home/app
 
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
